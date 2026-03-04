@@ -234,3 +234,8 @@ result+=`
 document.getElementById("result").innerHTML=result;
 
 }
+
+window.loginTeacher = loginTeacher;
+window.registerTeacher = registerTeacher;
+window.addScore = addScore;
+window.showStudentScore = showStudentScore;
