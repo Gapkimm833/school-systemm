@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard ครู</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>📘 Teacher Panel</h2>
+
+<button class="menu-btn">Dashboard</button>
+
+<button class="menu-btn" onclick="history.back()">
+Logout
+</button>
+
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div class="main">
+
+<h1>📊 Dashboard คะแนน</h1>
+
+<!-- SUMMARY CARDS -->
+
+<div class="summary">
+
+<div class="summary-card">
+<h3>จำนวนรายการ</h3>
+<p id="totalCount">0</p>
+</div>
+
+<div class="summary-card">
+<h3>ค่าเฉลี่ย</h3>
+<p id="avgScore">0</p>
+</div>
+
+</div>
+
+<!-- ADD SCORE -->
+
+<div class="card">
+
+<input id="studentId" placeholder="รหัสนักเรียน">
+
+<input id="subjectName" placeholder="ชื่อวิชา">
+
+<input id="score" placeholder="คะแนน">
+
+<button class="gold" onclick="addScore()">
+บันทึก
+</button>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="card">
+
+<table id="scoreTable">
+
+<thead>
+<tr>
+<th>รหัส</th>
+<th>วิชา</th>
+<th>คะแนน</th>
+<th>เกรด</th>
+<th>ครูผู้สอน</th>   <!-- ⭐ เพิ่มตรงนี้ -->
+<th>ลบ</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+<!-- CHART -->
+
+<div class="card">
+
+<canvas id="chart"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<script type="module" src="script.js"></script>
+
+</body>
+</html>
+<th>ลบ</th>
+<th>ครูผู้สอน</th>

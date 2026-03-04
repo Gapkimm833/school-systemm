@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="page-center">
+
+<button class="backBtn" onclick="history.back()">⬅ ย้อนกลับ</button>
+
+<div class="card">
+
+<h2>สมัครบัญชีครู</h2>
+
+<input id="newUser" placeholder="username">
+<input id="newPass" type="password" placeholder="password">
+
+<select id="subject">
+<option value="math">คณิต</option>
+<option value="science">วิทย์</option>
+<option value="english">อังกฤษ</option>
+</select>
+
+<button class="gold" onclick="registerTeacher()">สมัคร</button>
+
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
