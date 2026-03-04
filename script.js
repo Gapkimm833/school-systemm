@@ -1,8 +1,11 @@
-/* ===== LOGIN PRO ===== */
-import { db } from "./firebase.js";
-import { collection, addDoc, getDocs } from 
-"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+/* ===== FIREBASE ===== */
 
+import { db } from "./firebase.js";
+import { collection, addDoc, getDocs } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
+/* ===== LOGIN PRO ===== */
 
 function togglePassword(){
 
@@ -32,7 +35,8 @@ msg.style.color=color;
 
 }
 
-/* login */
+
+/* ===== LOGIN ครู ===== */
 
 function loginTeacher(){
 
@@ -59,7 +63,7 @@ return;
 
 }
 
-showLoginMessage("Login สำเร็จ กำลังเข้าสู่ระบบ...","green");
+showLoginMessage("Login สำเร็จ","green");
 
 localStorage.setItem("currentTeacher",JSON.stringify(teacher));
 
@@ -71,11 +75,12 @@ location.href="teacher.html";
 
 }
 
+
 /* ===== สมัครครู ===== */
 
 function registerTeacher(){
 
-const MASTER_KEY = "ADMIN2025"; // รหัสส่วนกลาง
+const MASTER_KEY = "ADMIN2025";
 
 let teachers = JSON.parse(localStorage.getItem("teachers")) || [];
 
@@ -93,16 +98,12 @@ alert("รหัสส่วนกลางไม่ถูกต้อง");
 return;
 }
 
-/* เช็ค username ซ้ำ */
-
 let exist = teachers.find(t=>t.username === user);
 
 if(exist){
 alert("username นี้มีแล้ว");
 return;
 }
-
-/* เพิ่มครู */
 
 teachers.push({
 username:user,
@@ -117,7 +118,8 @@ location.href="teacher_login.html";
 
 }
 
-/* ===== บันทึกคะแนน ===== */
+
+/* ===== เพิ่มคะแนน (Firebase) ===== */
 
 async function addScore(){
 
@@ -137,8 +139,6 @@ alert("กรอกข้อมูลให้ครบ");
 return;
 }
 
-/* ส่งข้อมูลไป Firebase */
-
 await addDoc(collection(db,"scores"),{
 
 studentId:id,
@@ -150,7 +150,57 @@ teacher:teacher.username
 
 alert("บันทึกคะแนนสำเร็จ");
 
+loadTable();
+
 }
+
+
+/* ===== โหลดคะแนนทั้งหมด ===== */
+
+async function loadTable(){
+
+let table=document.querySelector("#scoreTable tbody");
+
+if(!table) return;
+
+table.innerHTML="";
+
+let querySnapshot = await getDocs(collection(db,"scores"));
+
+querySnapshot.forEach((doc)=>{
+
+let s=doc.data();
+
+let grade =
+s.score>=80?"A":
+s.score>=70?"B":
+s.score>=60?"C":
+s.score>=50?"D":"F";
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${s.studentId}</td>
+
+<td>${s.subject}</td>
+
+<td>${s.score}</td>
+
+<td>${grade}</td>
+
+<td>${s.teacher}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+window.onload = loadTable;
+
 
 /* ===== นักเรียนดูคะแนน ===== */
 
@@ -169,9 +219,12 @@ let s=doc.data();
 if(s.studentId==id){
 
 result+=`
+
 <p>วิชา: ${s.subject}</p>
 <p>คะแนน: ${s.score}</p>
+<p>ครู: ${s.teacher}</p>
 <hr>
+
 `;
 
 }
@@ -179,97 +232,5 @@ result+=`
 });
 
 document.getElementById("result").innerHTML=result;
-
-}
-function loadTable(){
-
-let table=document.querySelector("#scoreTable tbody");
-
-if(!table) return;
-
-let scores = JSON.parse(localStorage.getItem("scores")) || [];
-
-table.innerHTML="";
-
-scores.forEach(s=>{
-
-let grade = s.score>=80?"A":s.score>=70?"B":s.score>=60?"C":s.score>=50?"D":"F";
-
-table.innerHTML+=`
-<tr>
-<td>${s.id}</td>
-<td>${s.subject}</td>
-<td>${s.score}</td>
-<td>${grade}</td>
-</tr>
-`;
-
-});
-
-}
-
-window.onload = loadTable;
-function loadTable(){
-
-let table=document.querySelector("#scoreTable tbody");
-
-if(!table) return;
-
-let scores = JSON.parse(localStorage.getItem("scores")) || [];
-
-table.innerHTML="";
-
-scores.forEach((s,index)=>{
-
-let grade = s.score>=80?"A":s.score>=70?"B":s.score>=60?"C":s.score>=50?"D":"F";
-
-table.innerHTML+=`
-<tr>
-<td>${s.id}</td>
-<td>${s.subject}</td>
-<td>${s.score}</td>
-<td>${grade}</td>
-<td>${s.teacherName || "-"}</td>
-<td>
-<button onclick="deleteScore(${index})">❌</button>
-</td>
-</tr>
-`;
-
-});
-
-}
-function deleteScore(index){
-
-let scores = JSON.parse(localStorage.getItem("scores")) || [];
-
-scores.splice(index,1); // ลบทีละรายการ
-
-localStorage.setItem("scores", JSON.stringify(scores));
-
-loadTable(); // refresh ตาราง
-
-}
-function changeTeacherName(newName){
-
-let teachers = JSON.parse(localStorage.getItem("teachers")) || [];
-
-let current = JSON.parse(localStorage.getItem("currentTeacher"));
-
-let teacher = teachers.find(t=>t.username === current.username);
-
-if(teacher){
-
-teacher.username = newName;
-
-localStorage.setItem("teachers", JSON.stringify(teachers));
-
-current.username = newName;
-
-localStorage.setItem("currentTeacher", JSON.stringify(current));
-
-alert("เปลี่ยนชื่อครูแล้ว");
-
-}
 
 }
